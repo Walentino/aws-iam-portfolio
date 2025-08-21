@@ -1,3 +1,12 @@
+## Evidence
+
+**Allowed with MFA**  
+![Allowed with MFA](../screenshots/day4-mfa-allowed.png)
+
+**Denied without MFA**  
+![Denied without MFA](../screenshots/day4-mfa-denied.png)
+
+
 # Day 4 — MFA Guardrail with Explicit Deny
 
 **Goal:** Enforce MFA across non-admin users. If MFA is not present, deny everything except the minimum needed to enroll MFA.
