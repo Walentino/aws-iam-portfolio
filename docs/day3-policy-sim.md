@@ -26,3 +26,6 @@ For each user: **IAM → Policy Simulator → Users → select user → Service:
 - **Union of allows** controls effective permissions.
 - **Implicit deny**: anything not explicitly allowed is denied.
 - **Resource scoping matters** (`.../*` vs bucket ARN).
+
+![Alice PutObject Deny](../screenshots/day3-alice-putobject-deny.png)
+![Ben PutObject Allow](../screenshots/day3-ben-putobject-allow.png)
