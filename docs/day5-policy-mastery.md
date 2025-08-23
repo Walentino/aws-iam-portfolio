@@ -72,13 +72,15 @@ _Note:_ This demonstrates that **explicit Deny wins** and how `NotAction` + `Boo
 
 ```
 
-GetObject (MFA=true)
+**GetObject (MFA=true)**
+
 <img width="1865" height="446" alt="Screenshot 2025-08-22 at 11 43 21 PM" src="https://github.com/user-attachments/assets/ff1bd3f3-6f7f-4b70-a51f-909a4155a0a3" />
 
-
+```
 Why: With MFA=true, ReadOnlyAccess allows read.
 
 PutObject (MFA=true)
+
 <img width="3390" height="922" alt="Screenshot 2025-08-22 at 11 44 00 PM" src="https://github.com/user-attachments/assets/417f4a9a-6f9b-43b9-859e-2f84fb63a34b" />
 
 ```
