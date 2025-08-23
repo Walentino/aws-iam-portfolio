@@ -61,24 +61,28 @@ _Note:_ This demonstrates that **explicit Deny wins** and how `NotAction` + `Boo
 
 ---
 
-## 5) Embed Evidence (paste after screenshots exist)
-```markdown
-## Evidence
+## Evidence (CLI)
 
-**Alice — read-only**
-![Alice Get allowed](../screenshots/day5-alice-get-allowed.png)
-![Alice Put denied](../screenshots/day5-alice-put-denied.png)
-![Alice List allowed](../screenshots/day5-alice-list-allowed.png)
 
-**Ben — writer**
-![Ben Put allowed](../screenshots/day5-ben-put-allowed.png)
+### Alice — read-only
 
-**Nino — MFA guardrail**
-![Nino Put denied (no MFA)](../screenshots/day5-nino-put-denied-no-mfa.png)
-![Nino Put allowed (with MFA)](../screenshots/day5-nino-put-allowed-with-mfa.png)
+**GetObject (MFA=false)**  
+
+<img width="1746" height="460" alt="Screenshot 2025-08-22 at 11 42 50 PM" src="https://github.com/user-attachments/assets/77481e13-5d4e-4579-87ba-359712110c70" />
+
 ```
 
----
+GetObject (MFA=true)
+<img width="1865" height="446" alt="Screenshot 2025-08-22 at 11 43 21 PM" src="https://github.com/user-attachments/assets/ff1bd3f3-6f7f-4b70-a51f-909a4155a0a3" />
+
+```
+Why: With MFA=true, ReadOnlyAccess allows read.
+
+PutObject (MFA=true)
+<img width="3390" height="922" alt="Screenshot 2025-08-22 at 11 44 00 PM" src="https://github.com/user-attachments/assets/417f4a9a-6f9b-43b9-859e-2f84fb63a34b" />
+
+```
+Why: ReadOnly has no Put permission → ImplicitDeny.
 
 ## 6) Commit Flow
 ```bash
