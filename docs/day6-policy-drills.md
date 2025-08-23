@@ -40,3 +40,51 @@
 |  Resource|  arn:aws:s3:::dummy-nino-policy-mastery/tests/test.txt   |
 +----------+----------------------------------------------------------+
 ```
+
+### Ben — MFA=false (PutObject)
+```text
+-----------------------------------------------------------------------
+|                       SimulatePrincipalPolicy                       |
++----------+----------------------------------------------------------+
+|  Action  |  s3:PutObject                                            |
+|  Decision|  explicitDeny                                            |
+|  Matched |  DenyIfNoMFA                                             |
+|  Resource|  arn:aws:s3:::dummy-nino-policy-mastery/tests/test.txt   |
++----------+----------------------------------------------------------+
+```
+
+### Ben — MFA=true (PutObject)
+```text
+-----------------------------------------------------------------------
+|                       SimulatePrincipalPolicy                       |
++----------+----------------------------------------------------------+
+|  Action  |  s3:PutObject                                            |
+|  Decision|  implicitDeny                                            |
+|  Matched |                                                          |
+|  Resource|  arn:aws:s3:::dummy-nino-policy-mastery/tests/test.txt   |
++----------+----------------------------------------------------------+
+```
+
+### Ben — MFA=false (PutObject)
+```text
+-----------------------------------------------------------------------
+|                       SimulatePrincipalPolicy                       |
++----------+----------------------------------------------------------+
+|  Action  |  s3:PutObject                                            |
+|  Decision|  explicitDeny                                            |
+|  Matched |  DenyIfNoMFA                                             |
+|  Resource|  arn:aws:s3:::dummy-nino-policy-mastery/tests/test.txt   |
++----------+----------------------------------------------------------+
+```
+
+### Ben — MFA=true (PutObject)
+```text
+-----------------------------------------------------------------------
+|                       SimulatePrincipalPolicy                       |
++----------+----------------------------------------------------------+
+|  Action  |  s3:PutObject                                            |
+|  Decision|  implicitDeny                                            |
+|  Matched |                                                          |
+|  Resource|  arn:aws:s3:::dummy-nino-policy-mastery/tests/test.txt   |
++----------+----------------------------------------------------------+
+```
