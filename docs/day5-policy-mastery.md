@@ -73,7 +73,7 @@ _Note:_ This demonstrates that **explicit Deny wins** and how `NotAction` + `Boo
 ```
 **GetObject (MFA=true)**
 
-![GetObject (MFA=true)](https://github.com/user-attachments/assets/ff1bd3f3-6f7f-4b70-a51f-909a4155a0a3)
+<img width="3390" height="922" alt="Screenshot 2025-08-22 at 11 44 00 PM" src="https://github.com/user-attachments/assets/cb70b0d0-7c1a-4414-b67c-397e15a27c58" />
 
 ```
 
