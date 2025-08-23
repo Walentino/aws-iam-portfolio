@@ -75,7 +75,7 @@ _Note:_ This demonstrates that **explicit Deny wins** and how `NotAction` + `Boo
 
 ![GetObject (MFA=true)](https://github.com/user-attachments/assets/ff1bd3f3-6f7f-4b70-a51f-909a4155a0a3)
 
-
+```
 
 Why: With MFA=true, ReadOnlyAccess allows read.
 
