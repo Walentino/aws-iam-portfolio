@@ -15,8 +15,8 @@ Prove an EC2 instance can access S3 via an instance profile, then practice Assum
 
 ```json
 "UserId": "AROAWVDXNX5APFZD2DIYI:i-02947efaa53fdd5ac",
-    "Account": "457664479040",
-    "Arn": "arn:aws:sts::457664479040:assumed-role/ec2-s3-readonly/i-02947efaa53fdd5ac"
+    "Account": "123456789012",
+    "Arn": "arn:aws:sts::123456789012:assumed-role/ec2-s3-readonly/i-02947efaa53fdd5ac"
 ```
 ### Instance metadata (role name)
 
