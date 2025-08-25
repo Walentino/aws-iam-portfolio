@@ -11,8 +11,8 @@ Enable SAML sign-in to AWS via an external IdP and prove it with STS identity.
 
 ## Evidence (CLI)
 ### STS identity after SAML
-```text
-<paste aws sts get-caller-identity output here>
+```
+
 
 ### Status
 - Identity Center verification deferred (no AWS Organizations in this lab account).
