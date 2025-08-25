@@ -13,3 +13,8 @@ Enable SAML sign-in to AWS via an external IdP and prove it with STS identity.
 ### STS identity after SAML
 ```text
 <paste aws sts get-caller-identity output here>
+
+### Status
+- Identity Center verification deferred (no AWS Organizations in this lab account).
+- SAML role claim format and IAM trust policy completed and documented.
+- Next step: when an Organization is available, assign a permission set in IAM Identity Center and test portal sign-in.
