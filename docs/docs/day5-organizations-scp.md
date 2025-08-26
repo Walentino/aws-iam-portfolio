@@ -48,3 +48,80 @@
     }
   }]
 }
+
+## Additional SCP Guardrail Examples
+
+> SCPs limit the *maximum* permissions. They don’t grant access, and they require AWS Organizations to take effect.
+
+### Require TLS for all AWS APIs
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Deny",
+    "Action": "*",
+    "Resource": "*",
+    "Condition": { "Bool": { "aws:SecureTransport": "false" } }
+  }]
+}
+
+
+## Require MFA for sensitive changes
+
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Deny",
+    "Action": [
+      "iam:*",
+      "ec2:TerminateInstances",
+      "rds:DeleteDBInstance",
+      "eks:DeleteCluster"
+    ],
+    "Resource": "*",
+    "Condition": { "BoolIfExists": { "aws:MultiFactorAuthPresent": "false" } }
+  }]
+}
+
+## Block public S3 ACLs & Public Bucket Policies
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DenyPublicACLs",
+      "Effect": "Deny",
+      "Action": ["s3:PutObjectAcl","s3:PutBucketAcl"],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-acl": ["public-read","public-read-write","authenticated-read"]
+        }
+      }
+    },
+    {
+      "Sid": "DenyPublicBucketPolicy",
+      "Effect": "Deny",
+      "Action": "s3:PutBucketPolicy",
+      "Resource": "*",
+      "Condition": {
+        "StringLike": { "s3:policy/*": "*\"AWS\":\"*\"" }
+      }
+    }
+  ]
+}
+
+## Protect CloudTrail (can’t disable/delete)
+
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Deny",
+    "Action": [
+      "cloudtrail:StopLogging",
+      "cloudtrail:DeleteTrail",
+      "cloudtrail:UpdateTrail"
+    ],
+    "Resource": "*"
+  }]
+}
