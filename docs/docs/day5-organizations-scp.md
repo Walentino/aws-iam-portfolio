@@ -49,10 +49,8 @@
   }]
 }
 
-## Additional SCP Guardrail Examples
+### Region restrictions (example SCP)
 
-### Require TLS for all AWS APIs
-```json
 {
   "Version": "2012-10-17",
   "Statement": [{
@@ -63,8 +61,7 @@
   }]
 }
 
-
-## Require MFA for sensitive changes
+### Require MFA for sensitive APIs (illustrative)
 
 {
   "Version": "2012-10-17",
@@ -73,14 +70,15 @@
     "Action": [
       "iam:*",
       "ec2:TerminateInstances",
-      "rds:DeleteDBInstance",
-      "eks:DeleteCluster"
+      "eks:DeleteCluster",
+      "rds:DeleteDBInstance"
     ],
     "Resource": "*",
     "Condition": { "BoolIfExists": { "aws:MultiFactorAuthPresent": "false" } }
   }]
 }
 
+### Block public S3 ACLs & bucket policies (illustrative)
 
 {
   "Version": "2012-10-17",
@@ -88,11 +86,11 @@
     {
       "Sid": "DenyPublicACLs",
       "Effect": "Deny",
-      "Action": ["s3:PutObjectAcl","s3:PutBucketAcl"],
+      "Action": ["s3:PutObjectAcl", "s3:PutBucketAcl"],
       "Resource": "*",
       "Condition": {
         "StringEquals": {
-          "s3:x-amz-acl": ["public-read","public-read-write","authenticated-read"]
+          "s3:x-amz-acl": ["public-read", "public-read-write", "authenticated-read"]
         }
       }
     },
@@ -107,6 +105,8 @@
     }
   ]
 }
+
+### Protect CloudTrail (can’t disable or delete)
 
 {
   "Version": "2012-10-17",
