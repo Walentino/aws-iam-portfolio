@@ -83,7 +83,6 @@
   }]
 }
 
-## Block public S3 ACLs & Public Bucket Policies
 
 {
   "Version": "2012-10-17",
@@ -110,8 +109,6 @@
     }
   ]
 }
-
-## Protect CloudTrail (can’t disable/delete)
 
 {
   "Version": "2012-10-17",
