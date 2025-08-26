@@ -1,15 +1,13 @@
 name: OIDC → AWS test
 
 on:
-  workflow_dispatch:            # allow manual runs
-  push:
-    branches: [ feat/day4-oidc ]  # ← change to main if your trust uses main
+  workflow_dispatch:
 
 jobs:
   sts:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write           # REQUIRED for OIDC
+      id-token: write      # required for OIDC
       contents: read
     steps:
       - uses: actions/checkout@v4
@@ -17,14 +15,10 @@ jobs:
       - name: Configure AWS creds via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/<YOUR_ROLE_NAME>   # ← replace
-          aws-region: us-east-1                                            # ← or your region
+          role-to-assume: arn:aws:iam::457664479040:role/gha-oidc-demo
+          aws-region: us-east-1
 
       - name: Show caller identity
         run: aws sts get-caller-identity --output json
 
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::457664479040:role/gha-oidc-demo
-          aws-region: us-east-1
 
