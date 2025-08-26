@@ -4,7 +4,9 @@
 Allow a “delegator” to create roles, but force a permissions boundary so those roles stay limited.
 
 ## Evidence
-(we'll paste CLI output as we go)
+```text
+arn:aws:iam::457664479040:role/PB-WithBoundary
+```
 
 ## Boundary policy ARN
 ```text
