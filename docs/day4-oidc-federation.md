@@ -11,3 +11,12 @@ Use GitHub Actions OIDC to assume an AWS role (no stored AWS keys).
 
 ## Evidence
 ### STS identity from the workflow
+
+```json
+
+{
+  "UserId": "...:GitHubActions",
+  "Account": "457664479040",
+  "Arn": "arn:aws:sts::457664479040:assumed-role/gha-oidc-demo/GitHubActions"
+}
+
