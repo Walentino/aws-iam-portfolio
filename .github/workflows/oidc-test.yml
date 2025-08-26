@@ -22,3 +22,9 @@ jobs:
 
       - name: Show caller identity
         run: aws sts get-caller-identity --output json
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::457664479040:role/gha-oidc-demo
+          aws-region: us-east-1
+
