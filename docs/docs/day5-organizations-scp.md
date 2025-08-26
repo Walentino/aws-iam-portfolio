@@ -51,8 +51,6 @@
 
 ## Additional SCP Guardrail Examples
 
-> SCPs limit the *maximum* permissions. They don’t grant access, and they require AWS Organizations to take effect.
-
 ### Require TLS for all AWS APIs
 ```json
 {
