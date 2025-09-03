@@ -1,0 +1,20 @@
+## Week 4 — Day 6: Access Reviews (Unused Permissions)
+
+**Goal:** Identify services never used by a principal and prepare a safe cleanup plan.
+
+### Steps
+```bash
+export REGION=us-east-1
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export ROLE_NAME=gha-oidc-demo
+export ROLE_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}
+
+JOB_ID=$(aws iam generate-service-last-accessed-details --arn "$ROLE_ARN" --query JobId --output text)
+while [[ "$(aws iam get-service-last-accessed-details --job-id "$JOB_ID" --query JobStatus --output text)" != "COMPLETED" ]]; do sleep 3; done
+
+aws iam get-service-last-accessed-details --job-id "$JOB_ID" \
+  --query 'ServicesLastAccessed[?LastAuthenticated!=null].{Service:ServiceName,LastUsed:LastAuthenticated}' --output table
+aws iam get-service-last-accessed-details --job-id "$JOB_ID" \
+  --query 'ServicesLastAccessed[?LastAuthenticated==null].ServiceName' --output table
+aws iam list-attached-role-policies --role-name "$ROLE_NAME" \
+  --query 'AttachedPolicies[].{Name:PolicyName,Arn:PolicyArn}' --output table
