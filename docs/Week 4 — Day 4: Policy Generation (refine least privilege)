@@ -1,0 +1,26 @@
+# Week 4 — Day 4: Policy Generation (refine least privilege)
+
+## Goal
+Generate least-privilege policy from CloudTrail activity and validate with Policy Simulator.
+
+## Steps
+1) **IAM Console → Roles → `gha-oidc-demo` → Generate policy**
+   - Time period: **Last 7 days** (or more if needed)
+   - Trail: **`account-trail`** (or your active account trail)
+   - Create new service role: **enabled** (if prompted)
+
+2) **Review & save policy**
+   - Click **Generate policy** → **View JSON** → save to repo as `policies/gha-oidc-least-priv.json`.
+   - Attach to role: **Inline** or create a **managed policy** `GHA-OIDC-LeastPriv`.
+
+3) **Validate with Policy Simulator**
+   - Policy Simulator → select the role and the new policy.
+   - Simulate key actions you expect (e.g., `sts:AssumeRoleWithWebIdentity`, plus any AWS APIs your workflow uses).
+   - Ensure **Allowed = true** for needed actions and **no explicit Deny**.
+
+## Evidence
+### Attached policy on the role
+```bash
+aws iam list-attached-role-policies \
+  --role-name gha-oidc-demo \
+  --query 'AttachedPolicies[].PolicyName' --output table
