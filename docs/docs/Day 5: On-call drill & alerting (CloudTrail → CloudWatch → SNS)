@@ -1,0 +1,35 @@
+## Week 5 — Day 5: On-call drill & alerting (CloudTrail → CloudWatch → SNS)
+
+**Goal**  
+Alert on CloudTrail authorization failures (e.g., `*UnauthorizedOperation`, `AccessDenied*`).
+
+**Resources**
+- Log group: `<your CloudTrail log group>`
+- SNS topic: `iam-oncall`
+- Alarm: `IAM-UnauthorizedOrDenied`
+
+**Commands**
+```bash
+# Create SNS topic & subscribe
+TOPIC_ARN=$(aws sns create-topic --name iam-oncall --region $REGION --query TopicArn --output text)
+aws sns subscribe --topic-arn "$TOPIC_ARN" --protocol email --notification-endpoint you@example.com --region $REGION
+
+# Metric filter (CloudTrail auth errors)
+aws logs put-metric-filter \
+  --log-group-name "<LOG_GROUP>" \
+  --filter-name CT-AuthzErrors \
+  --filter-pattern '{ ($.errorCode = "*UnauthorizedOperation") || ($.errorCode = "AccessDenied*") }' \
+  --metric-transformations metricName=AuthzErrors,metricNamespace=CloudTrailSecurity,metricValue=1 \
+  --region $REGION
+
+# Alarm on that metric
+aws cloudwatch put-metric-alarm \
+  --alarm-name IAM-UnauthorizedOrDenied \
+  --metric-name AuthzErrors --namespace CloudTrailSecurity --statistic Sum \
+  --period 60 --evaluation-periods 1 --threshold 1 --comparison-operator GreaterThanOrEqualToThreshold \
+  --alarm-actions "$TOPIC_ARN" \
+  --region $REGION
+
+TRAIL_NAME=$(aws cloudtrail list-trails --region $REGION --query 'Trails[0].Name' --output text)
+aws cloudtrail stop-logging --name "$TRAIL_NAME" || true
+
