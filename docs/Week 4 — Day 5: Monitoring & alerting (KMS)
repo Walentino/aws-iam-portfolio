@@ -1,0 +1,37 @@
+# Week 4 — Day 5: Monitoring & alerting (KMS)
+
+## Goal
+Email alerts for sensitive KMS actions via EventBridge + SNS (driven by CloudTrail).
+
+## Steps
+```bash
+# Vars
+export REGION=us-east-1
+export AA_EMAIL="you@example.com"
+export TOPIC_NAME=kms-alerts
+export RULE_NAME=kms-sensitive-actions
+
+# SNS (confirm email)
+TOPIC_ARN=$(aws sns create-topic --name "$TOPIC_NAME" --region "$REGION" --query TopicArn --output text)
+aws sns subscribe --topic-arn "$TOPIC_ARN" --protocol email --notification-endpoint "$AA_EMAIL" --region "$REGION"
+
+# EventBridge rule for KMS high-signal events
+aws events put-rule --name "$RULE_NAME" --event-pattern '{
+  "source": ["aws.kms"],
+  "detail-type": ["AWS API Call via CloudTrail"],
+  "detail": {
+    "eventSource": ["kms.amazonaws.com"],
+    "eventName": [
+      "DisableKey","ScheduleKeyDeletion","CancelKeyDeletion",
+      "PutKeyPolicy","DeleteAlias","UpdateAlias","CreateGrant","RevokeGrant"
+    ]
+  }
+}' --region "$REGION"
+
+# Target → SNS
+aws events put-targets --rule "$RULE_NAME" \
+  --targets "Id"="snsTarget","Arn"="$TOPIC_ARN" \
+  --region "$REGION"
+
+aws events describe-rule --name "$RULE_NAME" --region "$REGION" --query '{Name:Name,State:State}' --output table
+aws events list-targets-by-rule --rule "$RULE_NAME
