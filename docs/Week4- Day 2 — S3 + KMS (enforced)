@@ -1,0 +1,12 @@
+### Day 2 — S3 + KMS (enforced)
+
+**Bucket:** `BUCKET_NAME_HERE`  
+**Key ARN:** `KEY_ARN_HERE`
+
+**Evidence**
+```bash
+aws s3api head-object --bucket BUCKET_NAME_HERE --key ok.txt \
+  --query '{SSE:ServerSideEncryption,KMS:SSEKMSKeyId,Size:ContentLength}' --output json
+
+aws s3api put-object --bucket BUCKET_NAME_HERE --key should-fail.txt --body ok.txt
+# AccessDenied (missing SSE-KMS headers)
