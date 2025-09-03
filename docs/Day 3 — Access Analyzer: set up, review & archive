@@ -1,0 +1,40 @@
+## Day 3 — Access Analyzer: set up, review & archive
+
+**Goal**  
+Stand up an Access Analyzer, review cross-account findings, and archive the expected/benign ones to reduce noise.
+
+**Commands used**
+```bash
+export REGION=us-east-1
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+# Analyzer (reuse or create)
+export AA_NAME=$(aws accessanalyzer list-analyzers --type ACCOUNT --region "$REGION" --query 'analyzers[0].name' --output text)
+if [ "$AA_NAME" = "None" ] || [ -z "$AA_NAME" ]; then
+  export AA_NAME=nino-account-analyzer
+  aws accessanalyzer create-analyzer --analyzer-name "$AA_NAME" --type ACCOUNT --region "$REGION"
+fi
+export AA_ARN=$(aws accessanalyzer list-analyzers --type ACCOUNT --region "$REGION" --query 'analyzers[?name==`'"$AA_NAME"'`].arn | [0]' --output text)
+
+# Findings (active)
+aws accessanalyzer list-findings --analyzer-arn "$AA_ARN" --region "$REGION" \
+  --filter '{"status":{"eq":["ACTIVE"]}}' --max-results 50 \
+  --query 'findings[].{resource:resource, principal:principal}' --output table
+
+# Archive rules
+cat > aa-ignore-sso.json <<'JSON'
+{ "resource": { "contains": ["aws-reserved/sso.amazonaws.com/"] } }
+JSON
+aws accessanalyzer create-archive-rule --analyzer-name "$AA_NAME" \
+  --rule-name "ignore-aws-sso-roles" --filter file://aa-ignore-sso.json --region "$REGION"
+
+cat > aa-ignore-github-oidc.json <<'JSON'
+{ "principal": { "contains": ["token.actions.githubusercontent.com"] } }
+JSON
+aws accessanalyzer create-archive-rule --analyzer-name "$AA_NAME" \
+  --rule-name "ignore-github-oidc" --filter file://aa-ignore-github-oidc.json --region "$REGION"
+
+# Verify
+aws accessanalyzer list-archive-rules --analyzer-name "$AA_NAME" --region "$REGION" --output table
+aws accessanalyzer list-findings --analyzer-arn "$AA_ARN" --region "$REGION" \
+  --filter '{"status":{"eq":["ACTIVE"]}}' --query 'findings[].{resource:resource, principal:principal}' --output table
