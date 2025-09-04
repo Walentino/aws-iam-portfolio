@@ -1,0 +1,10 @@
+# Week 5 — Day 4: CloudTrail → CloudWatch Logs → Alarms
+
+## Goal
+Send CloudTrail IAM events to CloudWatch Logs, create metric filters, and alert via SNS.
+
+## Evidence
+```bash
+aws cloudtrail get-trail --name "$TRAIL_NAME" --query 'Trail.{LogGroupArn:CloudWatchLogsLogGroupArn,RoleArn:CloudWatchLogsRoleArn,IsMultiRegion:IsMultiRegionTrail}'
+aws logs describe-metric-filters --log-group-name "/aws/cloudtrail/iam-events" --query 'metricFilters[].{Name:filterName,Pattern:filterPattern}'
+aws cloudwatch describe-alarms --alarm-names ALARM-RootLogin ALARM-UnauthorizedApi ALARM-IamChange --query 'MetricAlarms[].{Name:AlarmName,Metric:MetricName,NS:Namespace,Actions:AlarmActions}'
