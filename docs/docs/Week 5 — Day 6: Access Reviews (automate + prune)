@@ -1,0 +1,27 @@
+## Week 5 — Day 6: Access Reviews (automate + prune)
+
+**Goal**  
+Identify services not used by a principal in the last 90 days and prepare to remove unnecessary permissions.
+
+**Principal**  
+`arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>`
+
+**Commands (summary)**
+
+```bash
+# Create Access Advisor report
+JOB_ID=$(aws iam generate-service-last-accessed-details --arn "$ROLE_ARN" --query JobId --output text)
+while STATE=$(aws iam get-service-last-accessed-details --job-id "$JOB_ID" --query JobStatus --output text); [ "$STATE" = "IN_PROGRESS" ]; do sleep 3; done
+
+# Unused services (LastAuthenticated == null)
+aws iam get-service-last-accessed-details --job-id "$JOB_ID" \
+  --query 'ServicesLastAccessed[?LastAuthenticated==`null`].{Service:ServiceName,Namespace:ServiceNamespace}' \
+  --output json > reports/week5/day6/unused-services.json
+jq -r '.[].Service' reports/week5/day6/unused-services.json | sort | nl > reports/week5/day6/UNUSED_SERVICES.txt
+
+# Policy context
+aws iam list-attached-role-policies --role-name "<ROLE_NAME>" \
+  --query 'AttachedPolicies[].{Name:PolicyName,Arn:PolicyArn}' \
+  --output table > reports/week5/day6/role-attached-policies.txt
+aws iam list-role-policies --role-name "<ROLE_NAME>" \
+  --query 'PolicyNames' --output table >> reports/week5/day6/role-attached-policies.txt
