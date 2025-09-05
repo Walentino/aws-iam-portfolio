@@ -1,0 +1,19 @@
+# Week 5 — Day X: IAM Security Dashboard
+
+## Goal
+Create a CloudWatch dashboard to visualize IAM security signals from CloudTrail-driven metrics.
+
+## Steps
+1. Built dashboard JSON with widgets for:
+   - Unauthorized API (time-series)
+   - Root logins (single value)
+   - IAM changes (single value)
+2. Uploaded with `aws cloudwatch put-dashboard`.
+
+## Evidence
+```bash
+aws cloudwatch describe-dashboards --dashboard-name-prefix "$DASH" \
+  --query 'DashboardEntries[0].{Name:DashboardName,LastModified:LastModified}' --output table
+
+aws cloudwatch get-dashboard --dashboard-name "$DASH" \
+  --query '{Name:DashboardName,Body:DashboardBody}' --output text | head -n 20
