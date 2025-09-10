@@ -1,0 +1,11 @@
+## Week 6 — Day 2: Break-glass alerts (detect & notify)
+
+**Goal.** Email me any time `BreakGlassAdmin` is assumed.
+
+**Evidence.**
+- SNS topic: `arn:aws:sns:${REGION}:${ACCOUNT_ID}:breakglass-alerts`
+- EventBridge rule: `BreakGlassAssumeRoleAlert`
+- Pattern filters on `sts:AssumeRole` where `requestParameters.roleArn` starts with `arn:aws:iam::${ACCOUNT_ID}:role/BreakGlassAdmin`.
+
+**Test.**
+- Assume the role with MFA → Email received: ✅
